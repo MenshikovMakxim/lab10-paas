@@ -67,6 +67,10 @@ jobs:
     needs: build
     environment: production
     steps:
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
       - name: Deploy via Railway CLI
         run: |
           npm install -g @railway/cli
