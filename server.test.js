@@ -16,8 +16,7 @@ describe("API Tests", () => {
 
   test("POST /sum calculates correctly", async () => {
     const res = await request(app).post("/sum").send({ a: 5, b: 3 });
-    expect(res.statusCode).toBe(200);
-    expect(res.body.result).toBe(8);
+    expect(res.body.result).toBe(999); // навмисна помилка
   });
 
   test("POST /sum returns error for non-numbers", async () => {
