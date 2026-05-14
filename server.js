@@ -1,31 +1,19 @@
 const express = require("express");
 const app = express();
-const PORT = process.env.PORT || 3000;
+app.use(express.json());
 
-const visits = {};
+app.get("/", (req, res) =>
+  res.json({ message: "Hello CI/CD!", version: "1.0.0" }),
+);
+app.get("/health", (req, res) => res.json({ status: "ok" }));
 
-app.get("/", (req, res) => {
-  res.json({
-    message: process.env.WELCOME_MSG || "Hello from PaaS!",
-    environment: process.env.NODE_ENV || "development",
-    version: process.env.APP_VERSION || "1.0.0",
-    hostname: require("os").hostname(),
-    timestamp: new Date().toISOString(),
-  });
+app.post("/sum", (req, res) => {
+  const { a, b } = req.body;
+  if (typeof a !== "number" || typeof b !== "number")
+    return res.status(400).json({ error: "a and b must be numbers" });
+  res.json({ result: a + b });
 });
 
-app.get("/health", (req, res) =>
-  res.json({ status: "ok", uptime: process.uptime() }),
-);
-
-app.listen(PORT, () =>
-  console.log(`Running on port ${PORT} in ${process.env.NODE_ENV} mode`),
-);
-
-app.get("/about", (req, res) => {
-  res.json({
-    name: "Lab 10 — PaaS Deployment",
-    student: process.env.STUDENT_NAME || "Unknown",
-    platform: "Railway / Render",
-  });
-});
+module.exports = app;
+if (require.main === module)
+  app.listen(process.env.PORT || 3000, () => console.log("Running"));
